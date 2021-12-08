@@ -2,6 +2,9 @@
 
 
 import datetime
+import random
+import time
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,11 +20,6 @@ def vykresliShluky(Ti, X, Y):
     plt.show()
 
 
-def vykresliBody(x, y):
-    plt.figure()
-    plt.scatter(x, y)
-    plt.show()
-    return
 
 def nactiDataDoPole(nazevSouboru):
     '''
@@ -31,7 +29,7 @@ def nactiDataDoPole(nazevSouboru):
     :param nazevSouboru: nazev textoveho souboru, ve kterem se vyskytuji data
     :return: dve pole s hodnotami X a Y
     '''
-    f = open('D:\Filip\Documents\Personal\School\FAV\Zima_2020\ZSUR\Semestralni_Prace\Data\\' + nazevSouboru + '.txt', 'r')
+    f = open(nazevSouboru + '.txt', 'r')
     arrayX = []
     arrayY = []
     for line in f:
@@ -172,131 +170,149 @@ def najdiHladinuH(h):
         if rozdil_h > max_rozdil_h:
             max_rozdil_h = rozdil_h
             pocet_trid = len(h) - i + 1
-    return pocet_trid, max_rozdil_h
+    return max_rozdil_h, pocet_trid
 
+def spustShlukovani(dataX, dataY, pocetShluku=1):
+    # sestaveni matice vzdalenosti
 
-if __name__ == '__main__':
-    '''chybi dodelat automaticke hledani shlukovych hladin a vykreslovani dat do nejruznejsich podob'''
-    nazev = 'testData'
-    #nazev = 'data_600'
-    programStart=datetime.datetime.now()
-
-
-    print("Nacteni dat ze souboru.")
-    start = datetime.datetime.now()
-    #nacteni dat do dvou poli
-    dataX, dataY = nactiDataDoPole(nazev)
-    end = datetime.datetime.now()
-    elapsed = end - start
-    print('Nacteni dat ze souboru do polí: ', elapsed)
-
-    # vykresleni importovanych 2D dat pro lepsi orientaci
-    '''plt.plot(dataX, dataY, 'o')
-    plt.title('Importovana data')
-    plt.xlabel('osa x')
-    plt.ylabel('osa y')
-    plt.show()'''
-
-
-    #sestaveni matice vzdalenosti
-    print("Sestavení matice vzdalenosti.")
-    start = datetime.datetime.now()
     matice = sestavMaticiVzdalenosti(dataX, dataY)
-    end = datetime.datetime.now()
-    elapsed = end - start
-    print('Sestavení matice vzdalenosti: ', elapsed)
-    #vytvoreni pole s informacemi o shlucich a shlukovych hladinach
-    Ti = [([i], 0) for i in range(len(dataX))]
-    TI = [ 0 for i in range(len(dataX)-1)]
 
-    #print(matice)
-    #print(dataX)
-    #elapsednejmensi = datetime.timedelta.min
-    #elapsedupravmatici = datetime.timedelta.min
-    plt.figure()
+    # vytvoreni pole s informacemi o shlucich a shlukovych hladinach
+    Ti = [([i], 0) for i in range(len(dataX))] #pomocne pole zaznamenavajici postupne shlukovani posledni hodnotu hladiny
+    TI = [] #pomocne pole pro zaznamenani prubehu hladin jednotlivych shlukovani
+    #labels = [0]*len(dataX) #pole s oznacenim vsech bodu do jednotlivych trid
+    shluky = []
+
     pocitadlo = 0
-    while(True):
-        #start = datetime.datetime.now()
+    while (True):
+        if pocetShluku == len(Ti):
+            #plt.show() #zobrazeni dendrogramu pri ukonceni shlukovani
+            break
         nejmensiVzdalenost, pozice = najdiNejmensiVzdalenost(matice)
-        novyShluk = Ti[pozice[0]][0]+Ti[pozice[1]][0]
-        #porovnani velikosti indexu, aby nedochazelo ke zcela nahodnemu vymazavani
-        if pozice[0]<pozice[1]:
+        novyShluk = Ti[pozice[0]][0] + Ti[pozice[1]][0]
+        # porovnani velikosti indexu, aby nedochazelo ke zcela nahodnemu vymazavani
+        if pozice[0] < pozice[1]:
             i1 = pozice[0]
             i2 = pozice[1]
         else:
             i1 = pozice[1]
             i2 = pozice[0]
-        kresliDendrogram(Ti[i1], Ti[i2], nejmensiVzdalenost)
+        kresliDendrogram(Ti[i1], Ti[i2], nejmensiVzdalenost) #vykresleni jednoho kroku shlukovani do dendrogramu
+        shluky.append((Ti[i1][0], Ti[i2][0]))
         Ti[i1] = (novyShluk, nejmensiVzdalenost)
         Ti.pop(i2)
-        TI[pocitadlo] = nejmensiVzdalenost
-        #print(TI)
+        TI.append(nejmensiVzdalenost)
 
-        #end = datetime.datetime.now()
-        #elapsed = end - start
-        #elapsednejmensi += elapsed
-        #print(f"nalezeni nejmensi vzdalenosti: {elapsed}")
-        #print(nejmensi)
-        #start = datetime.datetime.now()
+
         matice = upravMatici(matice, pozice)
-        #end = datetime.datetime.now()
-        #elapsed = end - start
-        #elapsedupravmatici += elapsed
-        #print(f"upraveni matice: {elapsed}")
-        #print(matice)
-        if (np.shape(matice)[0] == 1):
-            programEnd = datetime.datetime.now()
-            programElapsed = programEnd - programStart
-            print(najdiHladinuH(TI))
-            plt.show()
-            break
+
         pocitadlo += 1
-    #print(f"nalezeni nejmensi vzdalenosti: {elapsednejmensi}")
-    #print(f"upraveni matice: {elapsedupravmatici}")
-    #nalezeni hladin
-    # start = datetime.datetime.now()
-    # hladinaPodobnosti, body = najdiNejmensiVzdalenost(matice)
-    # end = datetime.datetime.now()
-    # elapsed = end - start
-    # print(hladinaPodobnosti, body)
-    # print(elapsed)
 
-    # start = datetime.datetime.now()
-    # matice = upravMatici(matice, body)
-    # end = datetime.datetime.now()
-    # elapsed = end - start
-    # print(matice)
-    # print(elapsed)
+    return Ti, TI, shluky
+
+def vykresliPrubehH(H):
+    delka = len(H)
+    x = list(range(delka))
+    y = H
+    plt.plot(x, y)
+    return
+
+def shuffleAndPickData(X, Y, number):
     '''
-    #zapsani hladin podobnosti a bodu do souboru
-    output='output.txt'
-    f = open(output, 'w')
-    start = datetime.datetime.now()
-    hladinaPodobnosti, body = najdiNejmensiVzdalenost(matice)
-    f.write(str(hladinaPodobnosti)+','+str(body[0])+','+str(body[1]))
-    predchoziHladina = hladinaPodobnosti
-    end = datetime.datetime.now()
-    elapsed = end - start
-    print('Nalezeni nejmensi vzdalenosti: ',elapsed)
-    start = datetime.datetime.now()
-    matice = upravMatici(matice, body)
-    end = datetime.datetime.now()
-    elapsed = end - start
-    print('Snizeni dimenze matice: ',elapsed)
-    #print(matice)
-    for i in range(len(dataX)-2):
-        start = datetime.datetime.now()
-        hladinaPodobnosti, body = najdiNejmensiVzdalenost(matice)
-        if hladinaPodobnosti==predchoziHladina:
-            f.write(str(body[0])+','+str(body[1]))
-        else:
-            f.write('\n'+str(hladinaPodobnosti)+','+str(body[0])+','+str(body[1]))
-        matice = upravMatici(matice, body)
-        end = datetime.datetime.now()
-        elapsed = end - start
-        print('Cas pro snizeni dimenze v poradi: ',i+1,)
-        print(elapsed,'\n')
-    
-    f.close()'''
+    metoda nahodny vyber urciteho poctu bodu z poskytnutych dat
+    :param X: hodnoty X poskytnutych dat
+    :param Y: hodnoty Y poskytnutych dat
+    :param number: pozadovany pocet vyslednych dat
+    :return: vraci zadany pocet dat ve formatu dvou poli X,Y
+    '''
 
-    print('Celkovy cas vypoctu: ', programElapsed)
+    seq = list(range(len(X)))#pole obsahujici indexy vstupnich dat
+    random.shuffle(seq)#nahodne zamichani indexu
+    #podminka pro overeni, zda nebyl pozadovany pocet bodu vyssi nez skutecny
+    if number>len(X):
+        print(f"Vybrany pocet dat {number} presahuje maximalni moznou volbu {len(X)}/nZvolen maximalni rozsah.")
+        number = len(X)
+    #inicializace poli pro zapsani zamichanych dat o pozadovane delce
+    newX = [0]*number
+    newY = [0]*number
+    #cyklus pro naplneni novych poli body na nahodne pozici
+    for i in range(number):
+        newX[i] = X[seq[i]]
+        newY[i] = Y[seq[i]]
+    return newX, newY
+
+def labelPodleH(shluky, TI, hladH):
+    '''
+    metodda pro generovani labelu pro jednotlive body na kterych bylo provadeno shlukovani
+    :param shluky: pole, ve kterem jsou zaznamenany jednotlive shluky, ktere se spolu shlukovaly
+    shluky[poradi shlukovani][0/1 indexy prvniho nebo druheho shluku, ktere se v danem kroku shlukovaly]
+    :param TI: hodnoty hladiny podobnosti pro jednotlive kroky shlukovani
+    :param hladH: desetinne cislo reprezentujici nalezenou optimalni hladinu H podle ktere se labeluje
+    :return: vraci pocet shluku a pole labelu (tzn indexy jednotlivych trid)
+    '''
+    labels = [0]*(len(shluky[-1][0])+len(shluky[-1][1]))#inicializace prazdneho pole labelu
+    labels = np.array(labels)#prevedeni na numpy array
+    pocetShluku = 1#promenna, ktera muze slouzit pro kontrolu a validaci poctu shluku
+    #cyklus pro porovnavani jednotlivych hladin podobnosti a prirazovani labelu
+    #prirazovani labelu probiha na zaklade olabelovani jednoho z puvodnich shluku (jedne vetve)
+    for i in range(len(TI)):
+        #indexovani TI odzadu, aby jsme nemuseli prochazet a overovat cele pole (jsou tam nejvyssi hondoty)
+        if hladH <= TI[-pocetShluku]:
+            labels[shluky[-pocetShluku][1]] = pocetShluku
+            pocetShluku += 1
+        else:
+            break
+    return pocetShluku, labels
+
+def vykresliDataPodleLabelu(dataX, dataY, labels):
+    '''
+    vykresli predana data podle labelu jednotlivych bodu
+    :param dataX: zdrojova data X
+    :param dataY: zdrojova data Y
+    :param labels: labely jendotlivych bodu (index v poli labelu odpovida indexu v datech X a Y)
+    :return:
+    '''
+    pocetShluku = len(np.unique(labels))#zjisteni poctu shluku z poctu rozdilnych oznaceni trid v poli labels
+    #inicializace hodnot x a y pro jednotlive tridy pro jednoduche vykresleni
+    x = [[] for i in range(pocetShluku)]
+    y = [[] for i in range(pocetShluku)]
+    #cyklus pro nacteni hodnot dat do poli odpovidajicich trid
+    for j in range(len(labels)):
+        x[labels[j]].append(dataX[j])
+        y[labels[j]].append(dataY[j])
+    #cyklus pro vykresleni shluku
+    for i in range(pocetShluku):
+        plt.plot(x[i], y[i], 'o')
+    return
+
+
+if __name__ == '__main__':
+    '''chybi dodelat automaticke hledani shlukovych hladin a vykreslovani dat do nejruznejsich podob'''
+    nazev = 'data'
+    pocetBodu = 600
+
+    #nacteni dat do dvou poli
+    dataX, dataY = nactiDataDoPole(nazev)
+    plt.scatter(dataX, dataY)
+    dataX, dataY = shuffleAndPickData(dataX, dataY, pocetBodu)
+    plt.scatter(dataX,dataY)
+    start = time.time()
+    plt.figure()
+    Ti, TI, shluky = spustShlukovani(dataX, dataY)
+    end = time.time()
+    print(f"shlukovani trvalo {end-start} s")
+    plt.figure()
+    vykresliPrubehH(TI)
+    #plt.show()
+    H, _ = najdiHladinuH(TI)
+    pocetShluku, labels = labelPodleH(shluky, TI, H)
+    print(shluky)
+    print(len(shluky), len(TI),len(labels))
+    print(np.unique(labels))
+    print(max(labels), min(labels))
+    print(pocetShluku)
+    plt.figure()
+    vykresliDataPodleLabelu(dataX, dataY, labels)
+    plt.show()
+    print('hotovo')
+
