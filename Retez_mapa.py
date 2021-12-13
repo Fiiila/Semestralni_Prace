@@ -32,8 +32,8 @@ def vykresliRetezMapu(retezovaMapa, X, Y):
         bod1, bod2 = retezovaMapa[i][0]
         x1, y1 = X[bod1], Y[bod1]
         x2, y2 = X[bod2], Y[bod2]
-        #plt.plot([x1, x2], [y1, y2], 'b')
-        plt.plot([x1, x2], [y1, y2], '-o', color='red')
+        plt.plot([x1, x2], [y1, y2], 'b')
+        plt.plot([x1, x2], [y1, y2], 'ro')
     return
 
 if __name__ == "__main__":
@@ -43,4 +43,6 @@ if __name__ == "__main__":
     matice = sestavMaticiVzdalenosti(X, Y)
     retMapa = hledejRetezMapu(matice, startovniBod=6)
     #print(retMapa)
+    plt.figure()
     vykresliRetezMapu(retMapa, X, Y)
+    plt.show()
