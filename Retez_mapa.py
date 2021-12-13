@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from AglomerativniMetoda.Agl_m_v01 import sestavMaticiVzdalenosti, vykresliBody, nactiDataDoPole
+from Agl_m_v01 import sestavMaticiVzdalenosti, nactiDataDoPole
 
 def hledejRetezMapu(matice, startovniBod = 0):
     pocetDat = np.shape(matice)[0]

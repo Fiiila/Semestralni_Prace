@@ -8,18 +8,6 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-def vykresliShluky(Ti, X, Y):
-    plt.figure()
-    for i in range(len(Ti)):
-        shlukX = [0]*len(Ti[i])
-        shlukY = [0]*len(Ti[i])
-        for j in range(len(Ti[i])):
-            shlukX[j] = X[Ti[i][j]]
-            shlukY[j] = Y[Ti[i][j]]
-        plt.plot(shlukX, shlukY, 'o')
-    plt.show()
-
-
 
 def nactiDataDoPole(nazevSouboru):
     '''
@@ -53,11 +41,8 @@ def spoctiVzdalenost(bod1, bod2):
 
 def sestavMaticiVzdalenosti(x, y):
     '''
-    Sestavi pocatecni matici vzdalenosti k nactenym datum
-
-    :type x: int
+    Sestavi matici vzdalenosti jednotlivych bodu od sebe
     :param x: x-ove souradnice bodu naskladane v poli
-    :type   y: int
     :param y: y-ove souradnice bodu naskladane v poli
     :return: numpy matice obsahujici informace o vzdalenostech jednotlivych bodu
     '''
@@ -67,6 +52,7 @@ def sestavMaticiVzdalenosti(x, y):
         for j in range(n):
             # vypocteni euklidovske vzdalenosti
             vzdalenost = spoctiVzdalenost([x[i], y[i]], [x[j], y[j]])
+            #zakomentovany vypocet vzdalenosti dvou bodu, aby slo jednoduse v metode upravit pripadnou jinou metodu vypoctu
             #vzdalenostX = x[i] - x[j]
             #vzdalenostY = y[i] - y[j]
             #vzdalenost = (vzdalenostX * vzdalenostX) + (vzdalenostY * vzdalenostY)
@@ -84,48 +70,48 @@ def najdiNejmensiVzdalenost(matice):
     n = len(matice[:, 0])
     nejmensiVzdalenost = np.inf
     nejmensiPozice = [np.inf, np.inf]
-    diag = 0
-    #tempprvekmatice = 0
+    diag = 0 #pomocny index diagonaly, aby metoda prohledavala pouze horni trojuhelnikovou cast matice
     for i in range(n):
         for j in range(diag):
-            #tempprvekmatice = matice[i, j]
             if matice[i, j] < nejmensiVzdalenost:
                 nejmensiPozice = [i, j]
                 nejmensiVzdalenost = matice[i, j]
 
         diag +=1
-    # for i in range(n):
-    #     for j in range(i + 1, n):
-    #         tempCislo = matice[i, j]
-    #         if tempCislo == 0:
-    #             continue
-    #         elif tempCislo < nejmensiVzdalenost:
-    #             nejmensiVzdalenost = tempCislo
-    #             nejmensiPozice[0], nejmensiPozice[1] = i, j
-    #             continue
     return nejmensiVzdalenost, nejmensiPozice
 
 
 def upravMatici(matice, pozice):
+    '''
+    Metoda, ktera ma za ukol sloucit dva sloupce(/radky) matice vzdalenosti
+    je vsak nutne, aby se jednotlive vzdalenosti porovnavaly a vybralas pouze ta nejmensi. Sloupec/ radek matice
+    na vyssi pozici vymaze po procesu porovnavani a prepisovani
+    :param matice: matice vzdalenosti
+    :param pozice: indexy shluku v matici vzdalenosti, ktere se musi sloucit
+    :return: vraci novou aktualizovanou matici se sloucenymi radky/sloupci na zadanych pozicich
+    '''
     Xbod = pozice[0]
     Ybod = pozice[1]
-    # vytvoreni docasneho vektoru, ktery se pak zapise misto obou
+    # vytvoreni docasneho vektoru, do ktereho se budou zapisovat minimalni vzdalenosti z obou pozic
     n = np.shape(matice)[0]
     tempVect = np.zeros(n)
+    #naplneni docasne matice minimalnimi vzdalenostmi z obou pozic
     for i in range(n):
         if(matice[i,Xbod]<matice[i,Ybod]):
             tempVect[i] = matice[i,Xbod]
         else:
             tempVect[i] = matice[i, Ybod]
+    #nalezeni vyssiho indexu pozice, ktery budeme vymazaval
     if(Xbod<Ybod):
         deleteSloupec = Ybod
         rewriteSloupec = Xbod
     else:
         deleteSloupec = Xbod
         rewriteSloupec = Ybod
-    tempVect = np.delete(tempVect, deleteSloupec)
+    tempVect = np.delete(tempVect, deleteSloupec) #vymaz indexu druhe pozice z docasneho pole
     novamatice = np.delete(matice, deleteSloupec, 0) #vymazani radku
     novamatice = np.delete(novamatice, deleteSloupec, 1) #vymazani sloupce
+    #prepsani prvni pozice ve zmensene matici docasne vytvorenym polem
     for j in range(n-1):
         novamatice[rewriteSloupec, j] = tempVect[j]
         novamatice[j, rewriteSloupec] = tempVect[j]
@@ -133,20 +119,14 @@ def upravMatici(matice, pozice):
     return novamatice
 
 
-
-def shlukovaHladina(X,Y,pocetShluku = 1):
-    '''
-    Aglomerativni metoda (shlukove hladiny) ktera rozdeli vstupni data do shluku podle euklidovske vzdalenosti 2D bodu
-
-    :param X: x-ove souradnice bodu v poli
-    :param Y: y-ove souradnice bodu v poli
-    :param pocetShluku: pocet trid do kterych se maji vstupni data rozdelit
-    :return:
-    '''
-    n = len(X)
-    pocMaticeVzdalenosti = sestavMaticiVzdalenosti(X, Y)
-
 def kresliDendrogram(shluk1, shluk2, hladinaPodobnosti):
+    '''
+    metoda, ktera na zaklade predanych parametru vykresli jeden krok shlukovani v dendrogramu (pro kompletni dendrogram nutno volat v cyklu)
+    :param shluk1: prvni spojovany shluk
+    :param shluk2: druhy spojovany shluk
+    :param hladinaPodobnosti: hodnota hladiny podobnosti na ktere doslo ke shlukovani
+    :return: nevraci nic, pouze vykresluje do jiz existujiciho figure
+    '''
     y1 = np.mean(shluk1[0])
     y2 = np.mean(shluk2[0])
     h1 = shluk1[1]
@@ -159,7 +139,7 @@ def kresliDendrogram(shluk1, shluk2, hladinaPodobnosti):
 def najdiHladinuH(h):
     '''
     automaticke nalezeni hladiny h a urceni poctu trid
-    na zaklade prubehu hladiny h
+    na zaklade prubehu hladiny h (rozdilu dvou poslednich hladin)
     :param h: hodnoty hladin podobnosti
     :return:
     '''
@@ -172,18 +152,15 @@ def najdiHladinuH(h):
             pocet_trid = len(h) - i + 1
     return max_rozdil_h, pocet_trid
 
-def spustShlukovani(dataX, dataY, pocetShluku=1):
+def spustShlukovani(dataX, dataY):
+    pocetShluku = 1 #rozdelana inicializace, kdy by se shlukovani zastavilo pri potrebnem poctu trid
     # sestaveni matice vzdalenosti
-
     matice = sestavMaticiVzdalenosti(dataX, dataY)
-
     # vytvoreni pole s informacemi o shlucich a shlukovych hladinach
     Ti = [([i], 0) for i in range(len(dataX))] #pomocne pole zaznamenavajici postupne shlukovani posledni hodnotu hladiny
     TI = [] #pomocne pole pro zaznamenani prubehu hladin jednotlivych shlukovani
-    #labels = [0]*len(dataX) #pole s oznacenim vsech bodu do jednotlivych trid
-    shluky = []
+    shluky = [] #pole do ktereho se zaznamenavaji jednotliva shlukovani, pro kazde shlukovani jedno pole s dalsimi dvema poli dvou spojovanych shluku
 
-    pocitadlo = 0
     while (True):
         if pocetShluku == len(Ti):
             #plt.show() #zobrazeni dendrogramu pri ukonceni shlukovani
@@ -202,15 +179,15 @@ def spustShlukovani(dataX, dataY, pocetShluku=1):
         Ti[i1] = (novyShluk, nejmensiVzdalenost)
         Ti.pop(i2)
         TI.append(nejmensiVzdalenost)
-
-
         matice = upravMatici(matice, pozice)
-
-        pocitadlo += 1
-
     return Ti, TI, shluky
 
 def vykresliPrubehH(H):
+    '''
+    metoda pro vykresleni prubehu hladiny podobnosti v prubehu shlukovani
+    :param H: pole hodnot hladin podobnosti
+    :return: nevraci nic, pouze vykresluje
+    '''
     delka = len(H)
     x = list(range(delka))
     y = H
@@ -270,7 +247,7 @@ def vykresliDataPodleLabelu(dataX, dataY, labels):
     :param dataX: zdrojova data X
     :param dataY: zdrojova data Y
     :param labels: labely jendotlivych bodu (index v poli labelu odpovida indexu v datech X a Y)
-    :return:
+    :return: nevraci nic, pouze vyplotuje data podle labelu do jiz existujiciho figure
     '''
     pocetShluku = len(np.unique(labels))#zjisteni poctu shluku z poctu rozdilnych oznaceni trid v poli labels
     #inicializace hodnot x a y pro jednotlive tridy pro jednoduche vykresleni
@@ -287,9 +264,9 @@ def vykresliDataPodleLabelu(dataX, dataY, labels):
 
 
 if __name__ == '__main__':
-    '''chybi dodelat automaticke hledani shlukovych hladin a vykreslovani dat do nejruznejsich podob'''
-    nazev = 'data'
-    pocetBodu = 600
+    '''NUTNE DODELAT KOMENTARE U HLAVNI SHLUKOVACI METODY'''
+    nazev = 'dataTest'
+    pocetBodu = 6
 
     #nacteni dat do dvou poli
     dataX, dataY = nactiDataDoPole(nazev)
@@ -306,11 +283,7 @@ if __name__ == '__main__':
     #plt.show()
     H, _ = najdiHladinuH(TI)
     pocetShluku, labels = labelPodleH(shluky, TI, H)
-    print(shluky)
-    print(len(shluky), len(TI),len(labels))
-    print(np.unique(labels))
-    print(max(labels), min(labels))
-    print(pocetShluku)
+
     plt.figure()
     vykresliDataPodleLabelu(dataX, dataY, labels)
     plt.show()
