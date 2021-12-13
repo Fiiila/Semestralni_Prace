@@ -36,6 +36,17 @@ def vykresliRetezMapu(retezovaMapa, X, Y):
         plt.plot([x1, x2], [y1, y2], 'ro')
     return
 
+def rozdelData(retezovaMapa, threshold):
+    labels = [0]*(len(retezovaMapa)+1)
+    cisloShluku = 0
+    for i in range(len(retezovaMapa)):
+        if retezovaMapa[i][1]>threshold:
+            cisloShluku += 1
+            labels[retezovaMapa[i][0][1]] = cisloShluku
+        else:
+            labels[retezovaMapa[i][0][1]] = cisloShluku
+    return labels
+
 if __name__ == "__main__":
     nazev = "data"#"testData2"
     X, Y = nactiDataDoPole(nazev)
