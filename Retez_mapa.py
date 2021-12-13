@@ -22,7 +22,6 @@ def hledejRetezMapu(matice, startovniBod = 0):
     return retezovaMapa
 
 def vykresliRetezMapu(retezovaMapa, X, Y):
-    plt.figure()
     x1 = 0
     x2 = 0
     y1 = 0
@@ -35,13 +34,12 @@ def vykresliRetezMapu(retezovaMapa, X, Y):
         x2, y2 = X[bod2], Y[bod2]
         plt.plot([x1, x2], [y1, y2], 'b')
         plt.plot([x1, x2], [y1, y2], 'ro')
-    plt.show()
     return
 
 if __name__ == "__main__":
     nazev = "data"#"testData2"
     X, Y = nactiDataDoPole(nazev)
-    vykresliBody(X, Y)
+    plt.scatter(X, Y)
     matice = sestavMaticiVzdalenosti(X, Y)
     retMapa = hledejRetezMapu(matice, startovniBod=6)
     #print(retMapa)
