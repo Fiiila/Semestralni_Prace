@@ -43,6 +43,7 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
     u.append(startovniBod)
     #pridani druhe stredni hodnoty
     u.append(najdiNejvzdalenejsiBodOdViceBodu(matice, [startovniBod]))
+    u = np.delete(u,0)
 
     konec = False
     while not konec:
