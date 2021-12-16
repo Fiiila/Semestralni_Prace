@@ -80,7 +80,7 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
                 Ti[r].append(u[r])
 
 
-    return Ti
+    return Ti, u
 
 def vykresliShluky(Ti, X, Y):
     '''
