@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-#from AglomerativniMetoda.Agl_m_v01 import sestavMaticiVzdalenosti, nactiDataDoPole, vykresliBody, spoctiVzdalenost
+from Agl_m_v01 import sestavMaticiVzdalenosti, nactiDataDoPole
 
 import numpy as np
 
@@ -11,6 +11,7 @@ def najdiNejvzdalenejsiBod(matice, bod):
         if u2[0] < matice[bod, i]:
             u2 = matice[bod, i], i
     return u2[1]
+
 def najdiNejvzdalenejsiBodOdViceBodu(matice, body):
     #potrebuji buffer
     buff = [[[0], [0]]for i in range(len(body))] #[[[],[]]]*len(body)
@@ -41,7 +42,7 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
     #pridani prvni stredni hodnoty
     u.append(startovniBod)
     #pridani druhe stredni hodnoty
-    u.append(najdiNejvzdalenejsiBodOdViceBodu(matice,[startovniBod]))
+    u.append(najdiNejvzdalenejsiBodOdViceBodu(matice, [startovniBod]))
 
     konec = False
     while not konec:
@@ -82,7 +83,14 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
     return Ti
 
 def vykresliShluky(Ti, X, Y):
-    plt.figure()
+    '''
+    meotda pro vykresleni bodu podle barev shluku na zaklade indexu jednotlivych shluku zaznamenanych v Ti
+    :param Ti:
+    :param X:
+    :param Y:
+    :return:
+    '''
+    #plt.figure()
     for i in range(len(Ti)):
         shlukX = [0]*len(Ti[i])
         shlukY = [0]*len(Ti[i])
@@ -99,8 +107,9 @@ def vykresliShluky(Ti, X, Y):
 if __name__=="__main__":
     nazev = 'data'#"testData2"
     X, Y = nactiDataDoPole(nazev)
-    vykresliBody(X, Y)
     matice = sestavMaticiVzdalenosti(X, Y)
     Ti = pouzijMaximin(matice, q=0.5, startovniBod=1)
     vykresliShluky(Ti, X, Y)
+    plt.show()
+
 
