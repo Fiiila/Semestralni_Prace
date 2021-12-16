@@ -4,6 +4,13 @@ import numpy as np
 from Agl_m_v01 import sestavMaticiVzdalenosti, nactiDataDoPole
 
 def hledejRetezMapu(matice, startovniBod = 0):
+    '''
+    Metoda, ktera s pomoci vyhledavani nejmensi vzdalenosti v poskytnutych bodech nalezne retezovou mapu
+    Lze ovlivnit odkud metoda bude zacinat hledat retezovou mapu
+    :param matice: matice vzdalenosti vsech bodu navzajem
+    :param startovniBod: index startovniho bodu v rozmezi 0-posledni index matice
+    :return: pole poli, kde vlozena pole maji format [[bodA, bodB],vzdalenost boduA a boduB], ktery muzeme brat jako delku nejkratsi usecky, ktera byla mezi body nalezena
+    '''
     pocetDat = np.shape(matice)[0]
     minVzdalenost = np.inf
     pozice = [0, 0]
@@ -22,6 +29,13 @@ def hledejRetezMapu(matice, startovniBod = 0):
     return retezovaMapa
 
 def vykresliRetezMapu(retezovaMapa, X, Y):
+    '''
+    Metoda pro vykresleni retezove mapy do jiz existujiciho figure. Vykresli jak body samotne, tak i usecky mezi nimi
+    :param retezovaMapa:
+    :param X:
+    :param Y:
+    :return:
+    '''
     x1 = 0
     x2 = 0
     y1 = 0
@@ -37,15 +51,22 @@ def vykresliRetezMapu(retezovaMapa, X, Y):
     return
 
 def rozdelData(retezovaMapa, threshold):
-    labels = [0]*(len(retezovaMapa)+1)
-    cisloShluku = 0
+    '''
+    metoda pro rozdeleni dat do jednotlivych trid podle daneho thresholdu vzdalenosti. Rozdeleni probiha tak,
+    ze se vytvori pro pocet bodu pole labelu a jednotlive body se olabeluji vzestupne cisly 0,1,2,3...
+    :param retezovaMapa: pole retezove mapy obsahujici informace o navazujicich bodech a delkach usecek mezi nimi
+    :param threshold: hranice, pri jejiz prekroceni se tvori novy shluk
+    :return: vraci pole labelu, pozice v poli oznacuje index bodu ve zdrojovych datech a
+    '''
+    labels = [0]*(len(retezovaMapa)+1)#vytvoreni pole labelu na zaklade poctu zdrojovych dat
+    cisloShluku = 0 #docasny index shluku (po pricteni jednicky lze ziskat celkovy pocet shluku)
     for i in range(len(retezovaMapa)):
         if retezovaMapa[i][1]>threshold:
             cisloShluku += 1
             labels[retezovaMapa[i][0][1]] = cisloShluku
         else:
             labels[retezovaMapa[i][0][1]] = cisloShluku
-    return labels
+    return labels, cisloShluku+1
 
 if __name__ == "__main__":
     nazev = "data"#"testData2"
