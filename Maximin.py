@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from AglomerativniMetoda.Agl_m_v01 import sestavMaticiVzdalenosti, nactiDataDoPole, vykresliBody, spoctiVzdalenost
+#from AglomerativniMetoda.Agl_m_v01 import sestavMaticiVzdalenosti, nactiDataDoPole, vykresliBody, spoctiVzdalenost
 
 import numpy as np
 
