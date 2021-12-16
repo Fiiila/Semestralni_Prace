@@ -68,7 +68,7 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
                 sum += matice[u[n], u[o]]
                 pocetVazeb += 1
 
-        qd = (q/pocetVazeb)*sum
+        qd = q*(sum/pocetVazeb)#(q/pocetVazeb)*sum
         if dmax[0]>qd:
             # vytvor dalsi shluk
             Ti = [[] for p in range(len(Ti)+1)]#vytvoreni pole pro zaznam jednotlivych shluku
