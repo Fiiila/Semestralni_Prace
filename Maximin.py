@@ -107,10 +107,10 @@ def vykresliShluky(Ti, X, Y):
 
 
 if __name__=="__main__":
-    nazev = 'data'#"dataTest2"
+    nazev = "dataTest2"
     X, Y = nactiDataDoPole(nazev)
     matice = sestavMaticiVzdalenosti(X, Y)
-    Ti,u = pouzijMaximin(matice, q=0.5, startovniBod=1)
+    Ti,u = pouzijMaximin(matice, q=0.5, startovniBod=6)
     print(Ti)
     vykresliShluky(Ti, X, Y)
     plt.show()
