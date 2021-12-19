@@ -43,7 +43,7 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
     u.append(startovniBod)
     #pridani druhe stredni hodnoty
     u.append(najdiNejvzdalenejsiBodOdViceBodu(matice, [startovniBod]))
-    u = np.delete(u,0)
+    u[0] = (najdiNejvzdalenejsiBodOdViceBodu(matice, [u[1]]))
 
     konec = False
     while not konec:
@@ -106,10 +106,11 @@ def vykresliShluky(Ti, X, Y):
 
 
 if __name__=="__main__":
-    nazev = 'data'#"testData2"
+    nazev = "dataTest2"
     X, Y = nactiDataDoPole(nazev)
     matice = sestavMaticiVzdalenosti(X, Y)
-    Ti = pouzijMaximin(matice, q=0.5, startovniBod=1)
+    Ti,u = pouzijMaximin(matice, q=0.5, startovniBod=1)
+    print(Ti)
     vykresliShluky(Ti, X, Y)
     plt.show()
 
