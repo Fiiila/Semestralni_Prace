@@ -3,6 +3,7 @@ import random
 
 import numpy as np
 
+from Agl_m_v01 import spoctiVzdalenost, nactiDataDoPole
 from Maximin import vykresliShluky
 from random import randint
 import matplotlib.pyplot as plt
