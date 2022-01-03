@@ -7,7 +7,7 @@ from Agl_m_v01 import spoctiVzdalenost, nactiDataDoPole
 from Maximin import vykresliShluky
 from random import randint
 import matplotlib.pyplot as plt
-random.seed(1)#nastaveni seedu...1-dobry vysledek 2-spatny vysledek
+#random.seed(1)#nastaveni seedu...1-dobry vysledek 2-spatny vysledek
 
 def najdiNejvzdalenejsiBodOdViceBodu(data, body):
     #potrebuji buffer
