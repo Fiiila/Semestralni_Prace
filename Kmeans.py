@@ -61,8 +61,8 @@ def K_means(data, pocetTrid):
     J = [] #ukazatel kvality
 
     #nalezeni nejvzdalenejsich startovnich bodu v datech
-    u = [[]]*pocetTrid #pocatecni definice poctu strednich hodnot
-    rCislo = randint(0,len(data)-1) #nahodny index startovaciho cisla z dat
+    #u = [[]]*pocetTrid #pocatecni definice poctu strednich hodnot
+    rCislo = randint(0, len(data)-1) #nahodny index startovaciho cisla z dat
     tempBod = data[rCislo] #nahodne cislo
     tempBod = najdiNejvzdalenejsiBodOdViceBodu(data, [tempBod]) #nalezeni nejvzdalenejsiho cisla k nahodne zvolenemu cislu
     u[0] = tempBod #prirazeni prvni stredni hodnoty nejvzdalenejsimu cislu vzhledem k nahodne vybranemu startovacimu cislu
@@ -73,18 +73,18 @@ def K_means(data, pocetTrid):
     J.append(ukazatelKvality)
     konec = True
     while(konec):
-        minuleStartovaciBody = u
-        u = upravStredniHodnoty(Ti, u, data)
+        minuleStartovaciBody = np.copy(u)
+        u = np.asarray(upravStredniHodnoty(Ti, u, data))
         Ti, ukazatelKvality = roztridDoTrid(Ti, u, data)
         J.append(ukazatelKvality)
-        if u == minuleStartovaciBody:
+        if (u == minuleStartovaciBody).all():
             konec = False
     return Ti, J, u
 
 
 
 if __name__=="__main__":
-    nazev = 'data'#"testData2"
+    nazev = 'data'#"dataTest2"
     X, Y = nactiDataDoPole(nazev)
     data = np.stack((X,Y),axis=-1)
     #vykresliBody(X, Y)
@@ -93,7 +93,7 @@ if __name__=="__main__":
     print(J)
     print('mi', u)
     vykresliShluky(Ti, X, Y)
-    plt.plot([u[0][0],u[1][0],u[2][0],u[3][0]],[u[0][1],u[1][1],u[2][1],u[3][1]],'bo')
+    plt.plot([u[0][0],u[1][0],u[2][0],u[3][0]],[u[0][1],u[1][1],u[2][1],u[3][1]],'yo')
     plt.show()
 
 
