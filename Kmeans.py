@@ -77,7 +77,7 @@ def K_means(data, pocetTrid):
         u = np.asarray(upravStredniHodnoty(Ti, u, data))
         Ti, ukazatelKvality = roztridDoTrid(Ti, u, data)
         J.append(ukazatelKvality)
-        if np.sum([dist(minuleStartovaciBody[i], u[i]) for i in range(len(u))]) <= 1e-6:
+        if np.sum([dist(minuleStartovaciBody[i], u[i]) for i in range(len(u))]) <= 1e-3:
         #if (u == minuleStartovaciBody).all():
             konec = False
     return Ti, J, u
