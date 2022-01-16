@@ -3,16 +3,17 @@ import random
 
 import numpy as np
 
-from Agl_m_v01 import spoctiVzdalenost, nactiDataDoPole
+from Agl_m_v01 import spoctiVzdalenost, nactiDataDoPole, shuffleAndPickData
 from Maximin import vykresliShluky
 from random import randint
 import matplotlib.pyplot as plt
-#random.seed(1)#nastaveni seedu...1-dobry vysledek 2-spatny vysledek
+random.seed(2)#nastaveni seedu...1-dobry vysledek 2-spatny vysledek
 
 def najdiNejvzdalenejsiBodOdViceBodu(data, body):
     #potrebuji buffer
     buff = [[[0], [0]]for i in range(len(body))] #[[[],[]]]*len(body)
     #i = 0
+    '''
     for i in range(len(data)):
         temp = [0] * len(body)
         for j in range(len(body)):
@@ -29,6 +30,26 @@ def najdiNejvzdalenejsiBodOdViceBodu(data, body):
                 #buff[j][1].append(i)
             else:
                 break
+                '''
+    prevsum = 0
+    for i in range(len(data)):
+        temp = [0] * len(body)
+        sum = 1
+        for j in range(len(body)):
+            cislo = spoctiVzdalenost(data[i], body[j])
+            temp[j] = cislo
+            sum *=cislo
+
+
+        if prevsum < sum:
+            for k in range(len(body)):
+                buff[k][0].append(temp[k])
+                buff[k][1].append(i)
+                prevsum = sum
+        else:
+            continue
+                # buff[j][0].append(matice[body[j], i])
+                # buff[j][1].append(i)
     return data[buff[0][1][-1]]
 
 def roztridDoTrid(Ti, stredniHodnoty, data):
@@ -64,9 +85,12 @@ def K_means(data, pocetTrid):
     #u = [[]]*pocetTrid #pocatecni definice poctu strednich hodnot
     rCislo = randint(0, len(data)-1) #nahodny index startovaciho cisla z dat
     tempBod = data[rCislo] #nahodne cislo
+    print(f"prvni docasny bod {tempBod}")
     tempBod = najdiNejvzdalenejsiBodOdViceBodu(data, [tempBod]) #nalezeni nejvzdalenejsiho cisla k nahodne zvolenemu cislu
+    print(f"druhy docasny bod {tempBod}")
     u[0] = tempBod #prirazeni prvni stredni hodnoty nejvzdalenejsimu cislu vzhledem k nahodne vybranemu startovacimu cislu
     #cyklus pro vyhledani zbylych nejvzdalenejsich strednich hodnot
+    print(f"zapsany bod {u}")
     for i in range(pocetTrid-1):
         u[i+1] = najdiNejvzdalenejsiBodOdViceBodu(data, u[0:i+1])
     Ti, ukazatelKvality = roztridDoTrid(Ti, u, data)
@@ -92,12 +116,16 @@ def dist(a,b):
 if __name__=="__main__":
     nazev = 'data'#"dataTest2"
     X, Y = nactiDataDoPole(nazev)
+    #X, Y = shuffleAndPickData(X,Y,60)
+    plt.figure()
+    plt.scatter(X,Y)
+    plt.show()
     data = np.stack((X,Y),axis=-1)
     #vykresliBody(X, Y)
     Ti, J, u = K_means(data, 4)
-    print(Ti)
-    print(J)
-    print('mi', u)
+    #print(Ti)
+    #print(J)
+    #print('mi', u)
     vykresliShluky(Ti, X, Y)
     plt.plot([u[0][0],u[1][0],u[2][0],u[3][0]],[u[0][1],u[1][1],u[2][1],u[3][1]],'yo')
     plt.show()
