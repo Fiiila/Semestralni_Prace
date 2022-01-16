@@ -124,7 +124,7 @@ if __name__=="__main__":
     #vykresliBody(X, Y)
     Ti, J, u = K_means(data, 4)
     #print(Ti)
-    #print(J)
+    print(J)
     #print('mi', u)
     vykresliShluky(Ti, X, Y)
     plt.plot([u[0][0],u[1][0],u[2][0],u[3][0]],[u[0][1],u[1][1],u[2][1],u[3][1]],'yo')
