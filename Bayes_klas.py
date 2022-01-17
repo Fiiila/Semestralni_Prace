@@ -72,6 +72,9 @@ if __name__ == "__main__":
     data = np.stack((X, Y), axis=-1)
     stredniHodnoty, covMat, aprPpsti = trainBayes(data, labels)
     gridPoints,gridLabel = clasifGrid(data,stredniHodnoty,covMat,aprPpsti)
+    #dataLabels = clasifBayes(data,stredniHodnoty,covMat,aprPpsti)
     plt.figure()
-    vykresliDataPodleLabelu(gridPoints[:,0],gridPoints[:,1],gridLabel)
-    plt.show
+    vykresliDataPodleLabelu(gridPoints[:,0],gridPoints[:,1],gridLabel, opacity=0.3)
+    #vykresliDataPodleLabelu(data[:, 0], data[:, 1], dataLabels, opacity=1)
+
+    plt.show()

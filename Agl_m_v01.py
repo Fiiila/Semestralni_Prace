@@ -241,7 +241,7 @@ def labelPodleH(shluky, TI, hladH):
             break
     return pocetShluku, labels
 
-def vykresliDataPodleLabelu(dataX, dataY, labels):
+def vykresliDataPodleLabelu(dataX, dataY, labels, opacity=1):
     '''
     vykresli predana data podle labelu jednotlivych bodu
     :param dataX: zdrojova data X
@@ -249,7 +249,7 @@ def vykresliDataPodleLabelu(dataX, dataY, labels):
     :param labels: labely jendotlivych bodu (index v poli labelu odpovida indexu v datech X a Y)
     :return: nevraci nic, pouze vyplotuje data podle labelu do jiz existujiciho figure
     '''
-    pocetShluku = len(np.unique(labels))#zjisteni poctu shluku z poctu rozdilnych oznaceni trid v poli labels
+    pocetShluku = len(np.unique(labels))#zjisteni poctu shluku z poctu rozdilnych oznaceni trid v poli labels.txt
     #inicializace hodnot x a y pro jednotlive tridy pro jednoduche vykresleni
     x = [[] for i in range(pocetShluku)]
     y = [[] for i in range(pocetShluku)]
@@ -259,19 +259,19 @@ def vykresliDataPodleLabelu(dataX, dataY, labels):
         y[labels[j]].append(dataY[j])
     #cyklus pro vykresleni shluku
     for i in range(pocetShluku):
-        plt.plot(x[i], y[i], 'o')
+        plt.plot(x[i], y[i], 'o', alpha=opacity)
     return
 
 
 if __name__ == '__main__':
     '''NUTNE DODELAT KOMENTARE U HLAVNI SHLUKOVACI METODY'''
-    nazev = 'dataTest'
-    pocetBodu = 6
+    nazev = 'data'
+    pocetBodu = 600
 
     #nacteni dat do dvou poli
     dataX, dataY = nactiDataDoPole(nazev)
     plt.scatter(dataX, dataY)
-    dataX, dataY = shuffleAndPickData(dataX, dataY, pocetBodu)
+    #dataX, dataY = shuffleAndPickData(dataX, dataY, pocetBodu)
     plt.scatter(dataX,dataY)
     start = time.time()
     plt.figure()
@@ -283,6 +283,11 @@ if __name__ == '__main__':
     #plt.show()
     H, _ = najdiHladinuH(TI)
     pocetShluku, labels = labelPodleH(shluky, TI, H)
+    f = open('Data/labels.txt', 'w')
+    for i in labels:
+        f.write(str(i)+'\n')
+
+    f.close
 
     plt.figure()
     vykresliDataPodleLabelu(dataX, dataY, labels)
