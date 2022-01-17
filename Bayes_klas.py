@@ -47,7 +47,7 @@ def clasifGrid(body, strHod, covMat, aprPpsti):
     xStep = np.abs(xmax-xmin)/noStep
     ymin, ymax = np.min(body[:, 1]), np.max(body[:, 1])
     yStep = np.abs(ymax - ymin) / noStep
-    X, Y = np.mgrid[xmin:xmax:xStep, ymin:ymax:yStep]
+    X, Y = np.mgrid[xmin-xStep:xmax+xStep:xStep, ymin-yStep:ymax+yStep:yStep]
     grid = np.stack((X.flatten(), Y.flatten()), -1)
 
     gridLabel = clasifBayes(grid,strHod,covMat,aprPpsti)
