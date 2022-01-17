@@ -251,6 +251,7 @@ def vykresliDataPodleLabelu(dataX, dataY, labels, opacity=1):
     '''
     pocetShluku = len(np.unique(labels))#zjisteni poctu shluku z poctu rozdilnych oznaceni trid v poli labels.txt
     #inicializace hodnot x a y pro jednotlive tridy pro jednoduche vykresleni
+    colorpalette = ['tab:blue','tab:orange','tab:green','tab:red','tab:purple']
     x = [[] for i in range(pocetShluku)]
     y = [[] for i in range(pocetShluku)]
     #cyklus pro nacteni hodnot dat do poli odpovidajicich trid
@@ -259,19 +260,19 @@ def vykresliDataPodleLabelu(dataX, dataY, labels, opacity=1):
         y[labels[j]].append(dataY[j])
     #cyklus pro vykresleni shluku
     for i in range(pocetShluku):
-        plt.plot(x[i], y[i], 'o', alpha=opacity)
+        plt.plot(x[i], y[i], 'o', alpha=opacity, color=colorpalette[i])
     return
 
 
 if __name__ == '__main__':
     '''NUTNE DODELAT KOMENTARE U HLAVNI SHLUKOVACI METODY'''
     nazev = 'data'
-    pocetBodu = 600
+    pocetBodu = 60
 
     #nacteni dat do dvou poli
     dataX, dataY = nactiDataDoPole(nazev)
     plt.scatter(dataX, dataY)
-    #dataX, dataY = shuffleAndPickData(dataX, dataY, pocetBodu)
+    dataX, dataY = shuffleAndPickData(dataX, dataY, pocetBodu)
     plt.scatter(dataX,dataY)
     start = time.time()
     plt.figure()
