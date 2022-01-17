@@ -41,6 +41,7 @@ def spoctiPpst(bod, strHod, covMat):
     expPart = math.exp(-1/2*diff.T.dot(invCovMat).dot(diff))
     ppst = 1/(math.sqrt((2*math.pi)**n * (detCovMat)))*expPart
     return ppst
+
 def clasifGrid(body, strHod, covMat, aprPpsti):
     noStep = 50
     xmin, xmax = np.min(body[:,0]), np.max(body[:,0])
