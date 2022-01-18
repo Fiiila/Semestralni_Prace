@@ -46,7 +46,7 @@ def nerovnomerneBinDeleni(data, pocetTrid):
         ceny = np.zeros(len(tridy), dtype=int)
         for j in range(len(tridy)):
             ceny[j] = tridy[j][2]
-        tempdata = tridy.pop(np.argmin(ceny))
+        tempdata = tridy.pop(np.argmax(ceny))
         prevTi = tempdata[3]
         tempdata = tempdata[0]
     labels = np.zeros(len(data), dtype=int)
@@ -66,7 +66,7 @@ if __name__ =="__main__":
     plt.show()
     data = np.stack((X, Y), axis=-1)
     # vykresliBody(X, Y)
-    labels, stredy, cenaTrid, J = rovnomerneBinDeleni(data, 4)
+    labels, stredy, cenaTrid, J = nerovnomerneBinDeleni(data, 4)
     plt.figure()
     vykresliDataPodleLabelu(X,Y,labels)
     plt.show()

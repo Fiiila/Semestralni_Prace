@@ -7,7 +7,7 @@ import numpy as np
 
 def vektorKvantizace(data, pocetTrid):
 
-    dataLabels, stredy, cenaTrid, J = rovnomerneBinDeleni(data, pocetTrid)
+    dataLabels, stredy, cenaTrid, J = nerovnomerneBinDeleni(data, pocetTrid)
 
     noStep = 50
     xmin, xmax = np.min(data[:, 0]), np.max(data[:, 0])
