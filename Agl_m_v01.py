@@ -267,7 +267,7 @@ def vykresliDataPodleLabelu(dataX, dataY, labels, opacity=1):
 if __name__ == '__main__':
     '''NUTNE DODELAT KOMENTARE U HLAVNI SHLUKOVACI METODY'''
     nazev = 'data'
-    pocetBodu = 60
+    pocetBodu = 600
 
     #nacteni dat do dvou poli
     dataX, dataY = nactiDataDoPole(nazev)
@@ -284,11 +284,13 @@ if __name__ == '__main__':
     #plt.show()
     H, _ = najdiHladinuH(TI)
     pocetShluku, labels = labelPodleH(shluky, TI, H)
-    f = open('Data/labels.txt', 'w')
-    for i in labels:
-        f.write(str(i)+'\n')
-
-    f.close
+    file = open(f'Data/data{pocetBodu}.txt', 'w')
+    f = open(f'Data/labels{pocetBodu}.txt', 'w')
+    for i in range(len(labels)):
+        f.write(f'{labels[i]}\n')
+        file.write(f'{dataX[i]} {dataY[i]}\n')
+    f.close()
+    file.close()
 
     plt.figure()
     vykresliDataPodleLabelu(dataX, dataY, labels)

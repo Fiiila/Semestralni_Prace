@@ -39,7 +39,7 @@ def spoctiPpst(bod, strHod, covMat):
     invCovMat = np.linalg.inv(covMat)
     detCovMat = np.linalg.det(covMat)
     expPart = math.exp(-1/2*diff.T.dot(invCovMat).dot(diff))
-    ppst = 1/(math.sqrt((2*math.pi)**n * (detCovMat)))*expPart
+    ppst = (1/(math.sqrt(2*math.pi)**n * detCovMat))*expPart
     return ppst
 
 def clasifGrid(body, strHod, covMat, aprPpsti):
@@ -64,18 +64,18 @@ def loadLabels(filename):
     return labels
 
 if __name__ == "__main__":
-    nazev = 'data'  # "dataTest2"
+    nazev = 'Data/data600'  # "dataTest2"
     X, Y = nactiDataDoPole(nazev)
-    labels = np.array(loadLabels('Data/labels.txt'))
+    labels = np.array(loadLabels('Data/labels600.txt'))
     #plt.figure()
     #plt.scatter(X, Y)
     #plt.show()
     data = np.stack((X, Y), axis=-1)
     stredniHodnoty, covMat, aprPpsti = trainBayes(data, labels)
     gridPoints,gridLabel = clasifGrid(data,stredniHodnoty,covMat,aprPpsti)
-    #dataLabels = clasifBayes(data,stredniHodnoty,covMat,aprPpsti)
+    dataLabels = clasifBayes(data,stredniHodnoty,covMat,aprPpsti)
     plt.figure()
     vykresliDataPodleLabelu(gridPoints[:,0],gridPoints[:,1],gridLabel, opacity=0.3)
-    #vykresliDataPodleLabelu(data[:, 0], data[:, 1], dataLabels, opacity=1)
+    vykresliDataPodleLabelu(data[:, 0], data[:, 1], dataLabels, opacity=1)
 
     plt.show()
