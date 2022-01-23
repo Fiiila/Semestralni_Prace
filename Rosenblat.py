@@ -96,7 +96,7 @@ def train(dataset, epochs, c=1):
     return q, prubeh_ceny
 
 def clasify(data, q, poDvou=True):
-    datalabels = np.zeros(len(data), dtype=int)
+    datalabels = np.zeros(len(data), dtype=int)+len(q)
     q = np.asarray(q)
     if poDvou:
         for i in range(len(data)):
