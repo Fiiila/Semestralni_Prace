@@ -10,7 +10,7 @@ from Bayes_klas import loadLabels
 from Klasifikace_NN import makeGrid
 
 
-def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
+def train(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
     pocetShluku = len(np.unique(trainlabels))
 
     mnoziny = [traindata[trainlabels==i]for i in range(pocetShluku)]
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     xmin, xmax = np.min(data[:, 0]), np.max(data[:, 0])
     ymin, ymax = np.min(data[:, 1]), np.max(data[:, 1])
     grid = makeGrid(xmin, xmax, ymin, ymax, noStep=50)
-    q,vyvojCeny = trainRosenblat(traindata=data, trainlabels=labels, epochs=20, beta=0.1,poDvou=False)
+    q,vyvojCeny = train(traindata=data, trainlabels=labels, epochs=20, beta=0.1,poDvou=False)
     q = np.asarray(q)
     print(vyvojCeny)
     gridlabels = clasify(grid, q, poDvou=False)
