@@ -62,7 +62,7 @@ def trainKonstPrir(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
 def train(dataset, epochs, beta):
     pocetDat = len(dataset[0])
     mixindexes = list(range(pocetDat))
-    q = np.zeros(len(dataset[0][0])+1)
+    q = np.zeros(len(dataset[0][0])+1)+1
     prubeh_ceny = []
     lastdataset = copy.deepcopy(dataset)
     for epoch in range(epochs):
@@ -95,6 +95,8 @@ def train(dataset, epochs, beta):
         sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} prumerna cena: {np.average(prubeh_ceny)}')
     sys.stdout.write('\n')
     return q, prubeh_ceny
+
+
 
 def clasify(data, q, poDvou=True):
     datalabels = np.zeros(len(data), dtype=int)
@@ -150,7 +152,7 @@ if __name__ == "__main__":
     xmin, xmax = np.min(data[:, 0]), np.max(data[:, 0])
     ymin, ymax = np.min(data[:, 1]), np.max(data[:, 1])
     grid = makeGrid(xmin, xmax, ymin, ymax, noStep=50)
-    q,vyvojCeny = trainKonstPrir(traindata=data, trainlabels=labels, epochs=20, beta=0.1,poDvou=True)
+    q,vyvojCeny = trainKonstPrir(traindata=data, trainlabels=labels, epochs=20, beta=1,poDvou=True)
     q = np.asarray(q)
     print(vyvojCeny)
     gridlabels = clasify(grid, q, poDvou=True)

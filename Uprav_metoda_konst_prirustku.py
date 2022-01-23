@@ -10,7 +10,7 @@ from Bayes_klas import loadLabels
 from Klasifikace_NN import makeGrid
 
 
-def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
+def trainUprKonstPrir(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
     pocetShluku = len(np.unique(trainlabels))
 
     mnoziny = [traindata[trainlabels==i]for i in range(pocetShluku)]
@@ -29,7 +29,7 @@ def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
                 datasetlabels = np.ones(pocet1+pocet2, dtype=int)
                 datasetlabels[pocet1:pocet1+pocet2] = -1
                 dataset = [np.concatenate((mnozina1, mnozina2), axis=0), datasetlabels]
-                tempq, prubeh_ceny = train(dataset,epochs)
+                tempq, prubeh_ceny = train(dataset,epochs, beta)
                 linDiskrFcns[i].append(tempq)
                 linDiskrFcns[j].append(-tempq)
                 celkovyVyvojCeny.append(prubeh_ceny)
@@ -54,12 +54,12 @@ def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
             datasetlabels = np.ones(pocet1+pocet2, dtype=int)
             datasetlabels[pocet1:pocet1+pocet2] = -1
             dataset = [np.concatenate((mnozina1, mnozina2), axis=0), datasetlabels]
-            tempq, prubeh_ceny = train(dataset,epochs)
+            tempq, prubeh_ceny = train(dataset,epochs, beta)
             linDiskrFcns[i].append(tempq)
             celkovyVyvojCeny.append(prubeh_ceny)
     return linDiskrFcns, np.sum(celkovyVyvojCeny, axis=0)
 
-def train(dataset, epochs, c=1):
+def train(dataset, epochs, beta):
     pocetDat = len(dataset[0])
     mixindexes = list(range(pocetDat))
     q = np.zeros(len(dataset[0][0])+1)+1
@@ -88,15 +88,19 @@ def train(dataset, epochs, c=1):
                 #konec
                 continue
             else:
-                q = q.T + tempbod.T.dot(templabel)
+                b = abs(np.dot(q.T,tempbod)*templabel)/beta
+                c = (beta*b)/(np.dot(tempbod.T,tempbod))
+                q = q.T + c*tempbod.T.dot(templabel)
                 cena += 1
         prubeh_ceny.append(cena)
         sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} prumerna cena: {np.average(prubeh_ceny)}')
     sys.stdout.write('\n')
     return q, prubeh_ceny
 
+
+
 def clasify(data, q, poDvou=True):
-    datalabels = np.zeros(len(data), dtype=int)+len(q)
+    datalabels = np.zeros(len(data), dtype=int)
     q = np.asarray(q)
     if poDvou:
         for i in range(len(data)):
@@ -149,7 +153,7 @@ if __name__ == "__main__":
     xmin, xmax = np.min(data[:, 0]), np.max(data[:, 0])
     ymin, ymax = np.min(data[:, 1]), np.max(data[:, 1])
     grid = makeGrid(xmin, xmax, ymin, ymax, noStep=50)
-    q,vyvojCeny = trainRosenblat(data, labels, epochs=20, poDvou=True)
+    q,vyvojCeny = trainUprKonstPrir(traindata=data, trainlabels=labels, epochs=20, beta=0.1,poDvou=True)
     q = np.asarray(q)
     print(vyvojCeny)
     gridlabels = clasify(grid, q, poDvou=True)
