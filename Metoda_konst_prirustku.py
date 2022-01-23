@@ -103,6 +103,7 @@ def clasify(data, q, poDvou=True):
         for i in range(len(data)):
             bod = data[i]
             bod = np.insert(bod,0,1)
+            label = len(q)
             for j in range(len(q)):
                 rozhodnuti = []
                 for k in range(len(q[j])):
@@ -112,8 +113,9 @@ def clasify(data, q, poDvou=True):
                     else:
                         rozhodnuti.append(False)
                 if np.all(rozhodnuti):
+                    label = j
                     break
-            datalabels[i] = j
+            datalabels[i] = label
     else:
         for i in range(len(data)):
             bod = data[i]
@@ -148,10 +150,10 @@ if __name__ == "__main__":
     xmin, xmax = np.min(data[:, 0]), np.max(data[:, 0])
     ymin, ymax = np.min(data[:, 1]), np.max(data[:, 1])
     grid = makeGrid(xmin, xmax, ymin, ymax, noStep=50)
-    q,vyvojCeny = train(traindata=data, trainlabels=labels, epochs=20, beta=0.1,poDvou=False)
+    q,vyvojCeny = trainKonstPrir(traindata=data, trainlabels=labels, epochs=20, beta=0.1,poDvou=True)
     q = np.asarray(q)
     print(vyvojCeny)
-    gridlabels = clasify(grid, q, poDvou=False)
+    gridlabels = clasify(grid, q, poDvou=True)
     '''x = np.linspace(xmin,xmax,2)
     y = []
     for j in range(2):
