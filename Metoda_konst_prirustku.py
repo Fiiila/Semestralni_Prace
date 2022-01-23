@@ -10,7 +10,7 @@ from Bayes_klas import loadLabels
 from Klasifikace_NN import makeGrid
 
 
-def train(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
+def trainKonstPrir(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
     pocetShluku = len(np.unique(trainlabels))
 
     mnoziny = [traindata[trainlabels==i]for i in range(pocetShluku)]
