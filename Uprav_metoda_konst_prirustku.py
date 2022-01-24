@@ -66,7 +66,7 @@ def train(dataset, epochs, beta):
     prubeh_ceny = []
     lastdataset = copy.deepcopy(dataset)
     for epoch in range(epochs):
-        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} cena: ')  # progress bar
+        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} průměrná cena: ')  # progress bar
         sys.stdout.flush()
         cena = 0
         #vytvoreni zamichaneho datasetu pro kazdou epochu
@@ -93,7 +93,7 @@ def train(dataset, epochs, beta):
                 q = q.T + c*tempbod.T.dot(templabel)
                 cena += 1
         prubeh_ceny.append(cena)
-        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} prumerna cena: {np.average(prubeh_ceny)}')
+        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} průměrná cena: {np.average(prubeh_ceny)}')
     sys.stdout.write('\n')
     return q, prubeh_ceny
 

@@ -88,12 +88,12 @@ def K_means(data, pocetTrid):
     #u = [[]]*pocetTrid #pocatecni definice poctu strednich hodnot
     rCislo = randint(0, len(data)-1) #nahodny index startovaciho cisla z dat
     tempBod = data[rCislo] #nahodne cislo
-    print(f"prvni docasny bod {tempBod}")
+    #print(f"prvni docasny bod {tempBod}")
     tempBod = najdiNejvzdalenejsiBodOdViceBodu(data, [tempBod]) #nalezeni nejvzdalenejsiho cisla k nahodne zvolenemu cislu
-    print(f"druhy docasny bod {tempBod}")
+    #print(f"druhy docasny bod {tempBod}")
     u[0] = tempBod #prirazeni prvni stredni hodnoty nejvzdalenejsimu cislu vzhledem k nahodne vybranemu startovacimu cislu
     #cyklus pro vyhledani zbylych nejvzdalenejsich strednich hodnot
-    print(f"zapsany bod {u}")
+    #print(f"zapsany bod {u}")
     for i in range(pocetTrid-1):
         u[i+1] = najdiNejvzdalenejsiBodOdViceBodu(data, u[0:i+1])
     Ti, ukazatelKvality, cenaTrid = roztridDoTrid(u, data)

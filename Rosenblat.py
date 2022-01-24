@@ -29,6 +29,7 @@ def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
                 datasetlabels = np.ones(pocet1+pocet2, dtype=int)
                 datasetlabels[pocet1:pocet1+pocet2] = -1
                 dataset = [np.concatenate((mnozina1, mnozina2), axis=0), datasetlabels]
+                print(f"Training fcn {i} {j}")
                 tempq, prubeh_ceny = train(dataset,epochs)
                 linDiskrFcns[i].append(tempq)
                 linDiskrFcns[j].append(-tempq)
@@ -54,6 +55,7 @@ def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
             datasetlabels = np.ones(pocet1+pocet2, dtype=int)
             datasetlabels[pocet1:pocet1+pocet2] = -1
             dataset = [np.concatenate((mnozina1, mnozina2), axis=0), datasetlabels]
+            print(f"Training fcn {i}")
             tempq, prubeh_ceny = train(dataset,epochs)
             linDiskrFcns[i].append(tempq)
             celkovyVyvojCeny.append(prubeh_ceny)
@@ -66,7 +68,7 @@ def train(dataset, epochs, c=1):
     prubeh_ceny = []
     lastdataset = copy.deepcopy(dataset)
     for epoch in range(epochs):
-        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} cena: ')  # progress bar
+        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} průměrná cena: ')  # progress bar
         sys.stdout.flush()
         cena = 0
         #vytvoreni zamichaneho datasetu pro kazdou epochu
@@ -91,7 +93,7 @@ def train(dataset, epochs, c=1):
                 q = q.T + tempbod.T.dot(templabel)
                 cena += 1
         prubeh_ceny.append(cena)
-        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} prumerna cena: {np.average(prubeh_ceny)}')
+        sys.stdout.write(f'\rTraining epoch {epoch+1}/{epochs} průměrná cena: {np.average(prubeh_ceny)}')
     sys.stdout.write('\n')
     return q, prubeh_ceny
 
