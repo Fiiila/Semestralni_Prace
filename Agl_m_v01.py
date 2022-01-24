@@ -251,7 +251,7 @@ def vykresliDataPodleLabelu(dataX, dataY, labels, opacity=1):
     '''
     pocetShluku = len(np.unique(labels))#zjisteni poctu shluku z poctu rozdilnych oznaceni trid v poli labels.txt
     #inicializace hodnot x a y pro jednotlive tridy pro jednoduche vykresleni
-    colorpalette = ['tab:blue','tab:orange','tab:green','tab:red','tab:purple','tab:brown','tab:pink','tab:gray','tab:olive','tab:cyan']
+    colorpalette = ['tab:blue','tab:orange','tab:green','tab:red','tab:pink','tab:purple','tab:brown','tab:gray','tab:olive','tab:cyan']
     x = [[] for i in range(pocetShluku)]
     y = [[] for i in range(pocetShluku)]
     #cyklus pro nacteni hodnot dat do poli odpovidajicich trid
