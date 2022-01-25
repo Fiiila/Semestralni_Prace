@@ -102,15 +102,25 @@ def vykresliShluky(Ti, X, Y):
         plt.plot(shlukX, shlukY, 'o')
     #plt.show()
 
-
+def vytvorLabel(pocetDat,Ti):
+    labels = np.zeros(pocetDat, dtype=int)
+    for i in range(len(Ti)):
+        for j in range(len(Ti[i])):
+            labels[Ti[i][j]] = i
+    return labels
 
 
 
 if __name__=="__main__":
-    nazev = "dataTest2"
+    nazev = "Data/data"
     X, Y = nactiDataDoPole(nazev)
     matice = sestavMaticiVzdalenosti(X, Y)
     Ti,u = pouzijMaximin(matice, q=0.5, startovniBod=6)
+    labels = vytvorLabel(len(X),Ti)
+    f = open(f'Data/labelsbad.txt', 'w')
+    for i in range(len(labels)):
+        f.write(f'{labels[i]}\n')
+    f.close()
     print(Ti)
     vykresliShluky(Ti, X, Y)
     plt.show()
