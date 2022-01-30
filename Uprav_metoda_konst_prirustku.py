@@ -38,6 +38,7 @@ def trainUprKonstPrir(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
                 datasetlabels = np.ones(pocet1+pocet2, dtype=int)
                 datasetlabels[pocet1:pocet1+pocet2] = -1
                 dataset = [np.concatenate((mnozina1, mnozina2), axis=0), datasetlabels]
+                print(f"Training fcn {i} {j}")
                 tempq, prubeh_ceny = train(dataset,epochs, beta)
                 linDiskrFcns[i].append(tempq)
                 linDiskrFcns[j].append(-tempq)
@@ -63,6 +64,7 @@ def trainUprKonstPrir(traindata, trainlabels, epochs=10, poDvou=True, beta=0.1):
             datasetlabels = np.ones(pocet1+pocet2, dtype=int)
             datasetlabels[pocet1:pocet1+pocet2] = -1
             dataset = [np.concatenate((mnozina1, mnozina2), axis=0), datasetlabels]
+            print(f"Training fcn {i}")
             tempq, prubeh_ceny = train(dataset,epochs, beta)
             linDiskrFcns[i].append(tempq)
             celkovyVyvojCeny.append(prubeh_ceny)
