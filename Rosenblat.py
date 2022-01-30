@@ -11,6 +11,14 @@ from Klasifikace_NN import makeGrid
 
 
 def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
+    '''
+    metoda, ktera natrenuje klasifikator - najde linearni diskriminacni funkce
+    :param traindata: trenovaci (vstupni data), podle kterych se vypoctou lin. diskr. fce
+    :param trainlabels: labely trenovacich dat
+    :param epochs: pocet epoch ve kterych ma probihat trenovani klasifikatoru
+    :param poDvou: metoda kdy jsou data lin. separovatelna - False jinak - True
+    :return: lin. diskr. fce a celkovou cenu rozdeleni
+    '''
     pocetShluku = len(np.unique(trainlabels))
 
     mnoziny = [traindata[trainlabels==i]for i in range(pocetShluku)]
@@ -62,6 +70,12 @@ def trainRosenblat(traindata, trainlabels, epochs=10, poDvou=True):
     return linDiskrFcns, np.sum(celkovyVyvojCeny, axis=0)
 
 def train(dataset, epochs, c=1):
+    '''
+    metoda pro trenovani klasifikatoru
+    :param dataset: vstupni dataset
+    :param epochs: pocet epoch
+    :return: lin. diskr. fce, prubeh ceny v jednotlivych epochach
+    '''
     pocetDat = len(dataset[0])
     mixindexes = list(range(pocetDat))
     q = np.zeros(len(dataset[0][0])+1)+1
@@ -98,6 +112,13 @@ def train(dataset, epochs, c=1):
     return q, prubeh_ceny
 
 def clasify(data, q, poDvou=True):
+    '''
+    metoda pro klasifikaci dat na zaklade zjistenych lin. disrk. fci
+    :param data: vstupni data pro klasifikaci
+    :param q: lin. liskr. fce
+    :param poDvou: zpusob zjistovani lin. diskr. fci
+    :return: labely vstupnich dat
+    '''
     datalabels = np.zeros(len(data), dtype=int)+len(q)
     q = np.asarray(q)
     if poDvou:

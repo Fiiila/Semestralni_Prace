@@ -6,6 +6,14 @@ from Bayes_klas import loadLabels
 
 
 def pouzijKNN(trainData, trainLabels, data, K=1):
+    '''
+    metoda pro klasifikaci podle K nejblizsich sousedu...defaultne nastaveno na 1
+    :param trainData: trenovaci data
+    :param trainLabels: labely odpovidajici trenovacim datum
+    :param data: vstupni data, ktera chceme klasifikovat
+    :param K: pocet podle kolika nejblizsich sousedu se ma klasifikator rozhodovat
+    :return: vraci labely danych vstupnich dat
+    '''
     dataLabels = np.zeros(len(data), dtype=int)
     mnoziny = [trainData[trainLabels == i] for i in range(len(np.unique(trainLabels)))]
     for i in range(len(data)):
@@ -20,6 +28,15 @@ def pouzijKNN(trainData, trainLabels, data, K=1):
     return dataLabels
 
 def makeGrid(xmin,xmax,ymin,ymax,noStep=50):
+    '''
+    vytvoreni bodu v uskupeni gridu pro vizualizaci klasifikace
+    :param xmin: hodnota bodu nejvice vlevo
+    :param xmax: hodnota bodu nejvice vpravo
+    :param ymin: hodnota bodu nejvice dole
+    :param ymax: hodnota bodu nejvice nahore
+    :param noStep: pocet kroku mezi hranicnimi body
+    :return: flattened array ziskaneho gridu
+    '''
     xStep = np.abs(xmax - xmin) / noStep
     yStep = np.abs(ymax - ymin) / noStep
     X, Y = np.mgrid[xmin - xStep:xmax + xStep:xStep, ymin - yStep:ymax + yStep:yStep]

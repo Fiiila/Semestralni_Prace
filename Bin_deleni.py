@@ -4,10 +4,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def rovnomerneBinDeleni(data, pocetTrid):
+    '''
+    metoda pro rovnomerne binarni deleni
+    :param data: vstupni data pro deleni
+    :param pocetTrid: pocet trid, do kterych se maji data rozdelit
+    :return: labely odpovidajici vstupnim datum, stredni hodnoty shluku, ceny jednotlivych trid a celkovou cenu shlukovani
+    '''
 
-    tridy = []
-    tempdata = np.array(data)
-    prevTi = np.array(range(len(data)))
+    tridy = [] #pole pro zaznam jednotlivych trid
+    tempdata = np.array(data) #docasna data, se kterymi se pracuje a ktera se dale rozdeluji na shluky
+    prevTi = np.array(range(len(data))) #pamet pro zaznamenani posleniho Ti
     while True:
         Ti, J, u, cenaTrid = K_means(tempdata, 2)
 
@@ -30,6 +36,12 @@ def rovnomerneBinDeleni(data, pocetTrid):
     return labels, stredy, cenaTrid, J
 
 def nerovnomerneBinDeleni(data, pocetTrid):
+    '''
+    metoda pro nerovnomerne binarni deleni
+    :param data: vstupni data pro deleni
+    :param pocetTrid: pocet trid, do kterych se maji data rozdelit
+    :return: labely odpovidajici vstupnim datum, stredni hodnoty shluku, ceny jednotlivych trid a celkovou cenu shlukovani
+    '''
     tridy = []
     tempdata = np.array(data)
     prevTi = np.array(range(len(data)))

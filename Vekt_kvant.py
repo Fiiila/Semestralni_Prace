@@ -6,6 +6,12 @@ from Kmeans import roztridDoTrid
 import numpy as np
 
 def vektorKvantizace(data, pocetTrid):
+    '''
+    metoda, ktera spusti vektorou kvantizaci
+    :param data: vstupni data
+    :param pocetTrid: pocet trid
+    :return: grid, labels pro grid, labels pro vstupni data, stredni hodnoty jednotlivych trid
+    '''
 
     dataLabels, stredy, cenaTrid, J = nerovnomerneBinDeleni(data, pocetTrid)
 

@@ -7,9 +7,15 @@ from Agl_m_v01 import spoctiVzdalenost, nactiDataDoPole, shuffleAndPickData
 from Maximin import vykresliShluky
 from random import randint
 import matplotlib.pyplot as plt
-random.seed(2)#nastaveni seedu...1-dobry vysledek 2-spatny vysledek
+#random.seed(2)#nastaveni seedu...1-dobry vysledek 2-spatny vysledek
 
 def najdiNejvzdalenejsiBodOdViceBodu(data, body):
+    '''
+    metoda pro nalezeni nejvzdalenejsiho bodu od bodu predanych v poli
+    :param data: vstupni data
+    :param body: body, ke kterym se ma hledat nejvzdalenejsi
+    :return: nejvzdalenejsi bod od zadanych bodu
+    '''
     #potrebuji buffer
     buff = [[[0], [0]]for i in range(len(body))] #[[[],[]]]*len(body)
     #i = 0
@@ -53,6 +59,12 @@ def najdiNejvzdalenejsiBodOdViceBodu(data, body):
     return data[buff[0][1][-1]]
 
 def roztridDoTrid(stredniHodnoty, data):
+    '''
+    metoda pro roztrideni dat na zaklade strednich hodnot
+    :param stredniHodnoty: stredni hodnoty danych trid
+    :param data: data, ktera chceme klasifikovat
+    :return: rozdeleni do trid Ti, celkovou cenu rozdeleni, cenu jednotlivych trid
+    '''
     J = 0
     cenaTrid = np.zeros(len(stredniHodnoty))
     Ti = [[]for i in range(len(stredniHodnoty))] #vysledne tridy
@@ -68,6 +80,13 @@ def roztridDoTrid(stredniHodnoty, data):
     return Ti, J, cenaTrid
 
 def upravStredniHodnoty(Ti, stredniHodnoty, data):
+    '''
+    metoda pro upraveni polohy strednich hodnot na zaklade rozdelenych bodu
+    :param Ti: rozdelene body do trid
+    :param stredniHodnoty: stredni hodnoty jednotlivych shluku
+    :param data: data, ktera se maji klasifikovat
+    :return: nove stredni hodnoty
+    '''
     for i in range(len(Ti)):
         tempStrHod = [0, 0]
         for j in range(len(Ti[i])):
@@ -79,6 +98,12 @@ def upravStredniHodnoty(Ti, stredniHodnoty, data):
     return stredniHodnoty
 
 def K_means(data, pocetTrid):
+    '''
+    obsluzna metoda pro vykonani Kmeans
+    :param data: vstupni data
+    :param pocetTrid: pocet trid, do kterych chceme vstupni data rozdelit
+    :return: TI - rozdelena data do trid, J - celkovou cenu rozdeleni, u - stredni hodnoty shluku, cenaTrid - ceny jednotlivych trid
+    '''
     #pocatecni inicializace parametru
     Ti = [[]for i in range(pocetTrid)] #vysledne tridy
     u = [[]for i in range(pocetTrid)] #vektory mi
@@ -110,6 +135,12 @@ def K_means(data, pocetTrid):
     return Ti, J, u, cenaTrid
 
 def dist(a,b):
+    '''
+    metoda pro zjisteni vzdalenosti mezi dvema vektory
+    :param a: prvni vektor
+    :param b: druhy vektor
+    :return: kvadrat euklidovske vzdalkenosti vektoru
+    '''
     a = np.array(a)
     b = np.array(b)
     diff = a - b

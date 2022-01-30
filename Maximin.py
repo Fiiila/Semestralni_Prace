@@ -6,6 +6,12 @@ import numpy as np
 
 
 def najdiNejvzdalenejsiBod(matice, bod):
+    '''
+    metoda pro nalezeni nejvzdalenejsiho bodu od daneho bodu
+    :param matice: matice vzdalenosti
+    :param bod: bod, ke kteremu hledam nejvzdalenejsi bod
+    :return: vraci index nejvzdalenejsiho bodu
+    '''
     u2 = [0, 0]
     for i in range(np.shape(matice)[0]):
         if u2[0] < matice[bod, i]:
@@ -13,6 +19,12 @@ def najdiNejvzdalenejsiBod(matice, bod):
     return u2[1]
 
 def najdiNejvzdalenejsiBodOdViceBodu(matice, body):
+    '''
+    metoda pro nalezeni nejvzdalenejsiho bodu od bodu predanych v poli
+    :param data: vstupni data
+    :param body: body, ke kterym se ma hledat nejvzdalenejsi
+    :return: nejvzdalenejsi bod od zadanych bodu
+    '''
     #potrebuji buffer
     buff = [[[0], [0]]for i in range(len(body))] #[[[],[]]]*len(body)
     #i = 0
@@ -35,6 +47,13 @@ def najdiNejvzdalenejsiBodOdViceBodu(matice, body):
 
 
 def pouzijMaximin(matice, q=0.5, startovniBod = 0):
+    '''
+    metoda ridici algoritmus maximin
+    :param matice: matice vzdalenosti
+    :param q: parametr q
+    :param startovniBod: index startovniho bodu
+    :return: rozdeleni bodu do trid a stredni hodnoty odpovidajicich shluku
+    '''
     #pocatecni inicializace metody maximin
     pocetBodu = np.shape(matice)[0]
     Ti = [[] for i in range(2)]#vytvoreni pole pro zaznam jednotlivych shluku
@@ -87,10 +106,10 @@ def pouzijMaximin(matice, q=0.5, startovniBod = 0):
 def vykresliShluky(Ti, X, Y):
     '''
     meotda pro vykresleni bodu podle barev shluku na zaklade indexu jednotlivych shluku zaznamenanych v Ti
-    :param Ti:
-    :param X:
-    :param Y:
-    :return:
+    :param Ti:rozdelene body v jednotlivych tridach
+    :param X: Xove souradnice vstupnich bodu
+    :param Y: Yove souradnice vstupnich bodu
+    :return: nevraci nic, jen vykresli do jiz existujiciho figure jednotlive shluky podle rozdeleni v Ti
     '''
     #plt.figure()
     for i in range(len(Ti)):
@@ -103,6 +122,12 @@ def vykresliShluky(Ti, X, Y):
     #plt.show()
 
 def vytvorLabel(pocetDat,Ti):
+    '''
+    vytvoreni labelovani dat podle rozdelenych bodu v Ti
+    :param pocetDat: pocet dat, podle kterho se vytvori vektor labelu
+    :param Ti: jednotlive body zarazene do shluku
+    :return: vraci pole labelu
+    '''
     labels = np.zeros(pocetDat, dtype=int)
     for i in range(len(Ti)):
         for j in range(len(Ti[i])):

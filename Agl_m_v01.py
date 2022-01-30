@@ -153,6 +153,12 @@ def najdiHladinuH(h):
     return max_rozdil_h, pocet_trid
 
 def spustShlukovani(dataX, dataY):
+    '''
+    Metoda, ktera ma na starosti cele shlukovani a vraci rozdelene body, hladiny podobnosti a shluky
+    :param dataX: Xova vstupni data
+    :param dataY: Yova vstupni data
+    :return: rozdelene body do shluku Ti, hladiny podobnosti TI, jednotlive shlukovani
+    '''
     pocetShluku = 1 #rozdelana inicializace, kdy by se shlukovani zastavilo pri potrebnem poctu trid
     # sestaveni matice vzdalenosti
     matice = sestavMaticiVzdalenosti(dataX, dataY)

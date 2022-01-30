@@ -31,10 +31,10 @@ def hledejRetezMapu(matice, startovniBod = 0):
 def vykresliRetezMapu(retezovaMapa, X, Y):
     '''
     Metoda pro vykresleni retezove mapy do jiz existujiciho figure. Vykresli jak body samotne, tak i usecky mezi nimi
-    :param retezovaMapa:
-    :param X:
-    :param Y:
-    :return:
+    :param retezovaMapa: predana retezova mapa
+    :param X: Xova vstupni data
+    :param Y: Yova vstupni data
+    :return: nevraci nic, pouze vykresluje do jiz existujiciho figure
     '''
     x1 = 0
     x2 = 0

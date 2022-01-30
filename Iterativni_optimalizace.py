@@ -10,6 +10,12 @@ from Maximin import pouzijMaximin
 
 
 def iterativniOptimalizace(data, labels):
+    '''
+    metoda obsluhujici iterativni optimalizaci vstupnich dat
+    :param data: data, ktera chceme optimalizovat (s poradim se nehybe...meni se pouze labely)
+    :param labels: labely vstupnich dat, ktera chceme optimalizovat
+    :return: nove labely, nove stredni hodnoty, puvodni ceny trid a nopve ceny trid
+    '''
     pocet = 0
     cenyTrid, stredniHodnoty = spoctiCenuAStredy(data, labels)
     pocetDat = len(data)
@@ -73,6 +79,12 @@ def iterativniOptimalizace(data, labels):
     return finallabels, cenyTrid, tempcenyTrid, tempstredniHodnoty
 
 def vytvorLabel(pocetDat,Ti):
+    '''
+    metoda pro vytvireni labelu ze znalosti roztrideni indexu jednotlivych bodu do trid
+    :param pocetDat: informace o poctu dat pro vytvoreni odpovidajiciho pole labelu
+    :param Ti: jednotlive tridy rozdelene do pole poli
+    :return: vytvorene labely v odpovidajicim poradi zdrojovych dat
+    '''
     labels = np.zeros(pocetDat, dtype=int)
     for i in range(len(Ti)):
         for j in range(len(Ti[i])):
@@ -80,6 +92,12 @@ def vytvorLabel(pocetDat,Ti):
     return labels
 
 def spoctiCenuAStredy(data, labels):
+    '''
+    metoda pro ziskani ceny jednotlivych trid a jejich stredni hodnoty
+    :param data: vstupni data
+    :param labels: labely jednotlivych trid
+    :return: pole cen jednotlivych trid, stredni hodnoty odpovidajici cenam trid
+    '''
     #labels = np.asarray(labels)
     cena = []
     stredniHodnoty = []

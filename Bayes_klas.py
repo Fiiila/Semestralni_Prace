@@ -7,6 +7,12 @@ from Agl_m_v01 import nactiDataDoPole, vykresliDataPodleLabelu
 
 
 def trainBayes(data, labels):
+    '''
+    Metoda pro spusteni trenovani klasifikatoru na trenovacich datech od ucitele
+    :param data: data od ucitele
+    :param labels: labely k odpovizajicim datum
+    :return: vraci stredni hodnoty, nalezene kovariancni matice shluku a apriorni ppsti jednotlivych shluku
+    '''
 
     tridy = np.unique(labels)
     pocetTrid = len(tridy)
@@ -22,6 +28,14 @@ def trainBayes(data, labels):
     return stredniHodnoty, covMat, aprPpsti
 
 def clasifBayes(body, strHod, covMat, aprPpsti):
+    '''
+    metoda, ktera vytvori labely pro body, ktere jsou metode predany na zaklade obdrzenych stredbich hodnot a kovariancnich matic a apriornich ppsti
+    :param body: body, ktere je potreba olabelovat
+    :param strHod: stredni hodnoty shluku od ucitele
+    :param covMat: kovariancni matice od ucitele
+    :param aprPpsti: apriorni ppsti od ucitele
+    :return: labely danych bodu v odpovidajicim poradi
+    '''
     pocetBodu = len(body)
     pocetTrid = len(strHod)
     labels = np.zeros(pocetBodu,dtype=int)
@@ -34,6 +48,13 @@ def clasifBayes(body, strHod, covMat, aprPpsti):
     return labels
 
 def spoctiPpst(bod, strHod, covMat):
+    '''
+    metoda pro vypocet ppsti, ze bod patri k dane stredni hodnote a covariancni matici resp patri ke shluku temito hodnotami derfinovanym
+    :param bod: bod, ktereho ppst chceme zjistit
+    :param strHod: stredni hodnota shluku, k nemuz chceme zjistit ppst
+    :param covMat: kovariancni matice daneho shluku
+    :return: vraci ppst ze bod patri do shluku definovaneho stredni hodnotou a kovariancni matici predane v parametrech
+    '''
     n = len(bod)
     diff = bod-strHod
     invCovMat = np.linalg.inv(covMat)
@@ -43,6 +64,14 @@ def spoctiPpst(bod, strHod, covMat):
     return ppst
 
 def clasifGrid(body, strHod, covMat, aprPpsti):
+    '''
+    metoda, ktera vytvori grid bodu v rozsahu bodu z datasetu
+    :param body: data, v souvislosti s kterymi budeme vykreslovat grid
+    :param strHod: stredni hodnoty jednotlivych shluku
+    :param covMat: kovariancni matice definujici jednotlive shluky
+    :param aprPpsti: apriorni ppsti jednotlivych shluku
+    :return: vytvorene body v gridu a jejich odpovidajici labely
+    '''
     noStep = 50
     xmin, xmax = np.min(body[:,0]), np.max(body[:,0])
     xStep = np.abs(xmax-xmin)/noStep
@@ -56,6 +85,11 @@ def clasifGrid(body, strHod, covMat, aprPpsti):
 
 
 def loadLabels(filename):
+    '''
+    metoda prpo nacteni labelu z textoveho souboru
+    :param filename: jmeno souboru popr. cesta k nemu
+    :return: vraci labely ve formatu list
+    '''
     f = open(filename)
     labels = []
     for line in f:
